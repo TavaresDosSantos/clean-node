@@ -12,11 +12,5 @@
     "lint-staged": "^12.3.4",
     "typescript": "^4.6.2"
   },
-  "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.0.1",
-    "eslint-config-standard-with-typescript": "^21.0.1",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.0.0"
-  }
+  "dependencies": {}
 }
