@@ -24,5 +24,8 @@
   },
   "scripts": {
     "test": "jest"
+  },
+  "dependencies": {
+    "ts-node": "^10.6.0"
   }
 }
