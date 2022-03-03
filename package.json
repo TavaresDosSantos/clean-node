@@ -23,8 +23,8 @@
     "typescript": "^4.6.2"
   },
   "scripts": {
-    "test": "jest",
-    "test:staged": "jest"
+    "test": "jest --passWithNoTests",
+    "test:staged": "jest --passWithNoTests"
   },
   "dependencies": {
     "ts-node": "^10.6.0"
