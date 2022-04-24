@@ -1,4 +1,4 @@
-import { MongoHelper } from '../data/db/mongodb/helpers/mongo-helper'
+import { MongoHelper } from '../infra/db/mongodb/helpers/mongo-helper'
 
 MongoHelper.connect('mongodb://localhost:27017/clean-node-api').then(async () => {
   const app = (await import('./config/app')).default
