@@ -10,7 +10,7 @@ import {
   ServerError,
   MissingParamError
 } from '../../errors'
-import { ok, badRequest, serverError } from '../../helpers/http-helpers'
+import { ok, badRequest, serverError } from '../../helpers/http/http-helpers'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
