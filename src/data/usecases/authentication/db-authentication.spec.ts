@@ -1,4 +1,5 @@
-import { HashCompare } from 'data/protocols/criptography/hash-compare'
+import { HashCompare } from '../../../data/protocols/criptography/hash-compare'
+import { TokenGenerator } from '../../../data/protocols/criptography/token-generator'
 import { AuthenticationModel } from '../../../domain/usecases/authentication'
 import { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
 import { AccountModel } from '../add-account/db-add-accoun-protocols'
@@ -30,25 +31,37 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
 const makeHashCompara = (): HashCompare => {
   class HashCompareStub implements HashCompare {
     async compare (value: string, hash: string): Promise<boolean> {
-      return true
+      return new Promise(resolve => resolve(true))
     }
   }
 
   return new HashCompareStub()
 }
 
+const makeTokenGenerator = (): TokenGenerator => {
+  class TokenGeneratorStub implements TokenGenerator {
+    async generate (id: string): Promise<string> {
+      return new Promise(resolve => resolve('any_token'))
+    }
+  }
+
+  return new TokenGeneratorStub()
+}
+
 interface SutTypes {
   sut: DbAuthentication
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   hashCompareStub: HashCompare
+  tokenGeneratorStub: TokenGenerator
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository()
   const hashCompareStub = makeHashCompara()
-  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashCompareStub)
+  const tokenGeneratorStub = makeTokenGenerator()
+  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hashCompareStub, tokenGeneratorStub)
 
-  return { sut, loadAccountByEmailRepositoryStub, hashCompareStub }
+  return { sut, loadAccountByEmailRepositoryStub, hashCompareStub, tokenGeneratorStub }
 }
 
 describe('DbAuthenticationUseCase', () => {
@@ -75,9 +88,9 @@ describe('DbAuthenticationUseCase', () => {
 
   test('Should call HashComparer with correct values', async () => {
     const { sut, hashCompareStub } = makeSut()
-    const loadSpy = jest.spyOn(hashCompareStub, 'compare')
+    const compareSpy = jest.spyOn(hashCompareStub, 'compare')
     await sut.auth(makeFakeAuthentication())
-    expect(loadSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
+    expect(compareSpy).toHaveBeenCalledWith('any_password', 'hashed_password')
   })
 
   test('Should throws if HashCompare throws', async () => {
@@ -92,5 +105,12 @@ describe('DbAuthenticationUseCase', () => {
     jest.spyOn(hashCompareStub, 'compare').mockReturnValueOnce(new Promise((resolve) => resolve(false)))
     const accessToken = await sut.auth(makeFakeAuthentication())
     expect(accessToken).toBeNull()
+  })
+
+  test('Should call TokenGenerator with correct id', async () => {
+    const { sut, tokenGeneratorStub } = makeSut()
+    const generateSpy = jest.spyOn(tokenGeneratorStub, 'generate')
+    await sut.auth(makeFakeAuthentication())
+    expect(generateSpy).toHaveBeenCalledWith('any_id')
   })
 })
