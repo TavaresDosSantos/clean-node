@@ -3,7 +3,7 @@ import {
   HashCompare,
   AuthenticationModel,
   TokenGenerator,
-  LoadAccountByEmailRepository,
+  LoadAccountByEmailRepository
 } from './db-authentication-protocols'
 
 export class DbAuthentication {
