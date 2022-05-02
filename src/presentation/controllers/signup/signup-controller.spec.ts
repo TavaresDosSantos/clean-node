@@ -4,8 +4,8 @@ import {
   AddAccountModel,
   HttpRequest,
   Validation
-} from './signup-protocols'
-import { SignUpController } from './signup'
+} from './signup-protocols-controller'
+import { SignUpController } from './signup-controller'
 import {
   ServerError,
   MissingParamError
