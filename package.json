@@ -24,13 +24,14 @@
     "husky": "^7.0.4",
     "jest": "^27.5.1",
     "lint-staged": "^12.3.4",
-    "sucrase": "^3.20.3",
     "supertest": "^6.2.2",
     "ts-jest": "^27.1.3",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.6.2"
   },
   "scripts": {
-    "start": "sucrase-node src/main/server.ts",
+    "start": "ts-node-dev src/main/server.ts",
+    "debug": "ts-node-dev --inspect=0.0.0.0:9222 --nolazy src/main/server.ts",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:unit": "yarn test -- --watch -c jest-unit-config.js",
