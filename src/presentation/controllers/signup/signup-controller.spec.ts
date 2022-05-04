@@ -4,7 +4,7 @@ import {
   AddAccountModel,
   HttpRequest,
   Validation
-} from './signup-protocols-controller'
+} from './signup-controller-protocols'
 import { SignUpController } from './signup-controller'
 import {
   ServerError,
