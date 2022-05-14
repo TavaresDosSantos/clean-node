@@ -2,7 +2,7 @@ import { HttpRequest } from '../../presentation/protocols'
 import { AccountModel } from '../../domain/models/account'
 import { LoadAccountByToken } from '../../domain/usecases/load-account-by-token'
 import { AccessDeniedError } from '../../presentation/errors'
-import { forbidden } from '../../presentation/helpers/http/http-helpers'
+import { forbidden, ok } from '../../presentation/helpers/http/http-helpers'
 import { AuthMiddleware } from './auth-middleware'
 
 const makeFakeAccount = (): AccountModel => ({
@@ -60,5 +60,11 @@ describe('AuthMiddleware', () => {
     const loadSpy = jest.spyOn(loadAccountByTokenStub, 'load').mockReturnValue(new Promise(resolve => resolve(null)))
     await sut.handle(makeFakeRequest())
     expect(loadSpy).toHaveBeenCalledWith('any_token')
+  })
+
+  test('Should return 200 if LoadAccountByToken an account', async () => {
+    const { sut } = makeSut()
+    const httpReponse = await sut.handle(makeFakeRequest())
+    expect(httpReponse).toEqual(ok({ accountId: 'valid_id' }))
   })
 })
