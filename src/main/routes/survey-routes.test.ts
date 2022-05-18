@@ -7,6 +7,26 @@ import { sign } from 'jsonwebtoken'
 let surveyCollection: Collection
 let accountCollection: Collection
 
+const makeAccessToken = async (): Promise<string> => {
+  const result = await accountCollection.insertOne({
+    name: 'Euller',
+    email: 'euller@gmail.com',
+    password: '123',
+    role: 'admin'
+  })
+
+  const { insertedId: id } = result
+  const accessToken = sign({ id }, '%$Dda3ab*¨#')
+  await accountCollection.updateOne({
+    _id: id
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+  return accessToken
+}
+
 describe('Survey Routes', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
@@ -40,23 +60,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 204 on add survey with valid accessToken', async () => {
-      const result = await accountCollection.insertOne({
-        name: 'Euller',
-        email: 'euller@gmail.com',
-        password: '123',
-        role: 'admin'
-      })
-
-      const { insertedId: id } = result
-      const accessToken = sign({ id }, '%$Dda3ab*¨#')
-
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await makeAccessToken()
 
       await request(app)
         .post('/api/surveys')
@@ -72,32 +76,18 @@ describe('Survey Routes', () => {
         })
         .expect(204)
     })
+  })
 
-    describe('GET /surveys', () => {
-      test('Should return 403 on load surveys without accessToken', async () => {
-        await request(app)
-          .get('/api/surveys')
-          .expect(403)
-      })
+  describe('GET /surveys', () => {
+    test('Should return 403 on load surveys without accessToken', async () => {
+      await request(app)
+        .get('/api/surveys')
+        .expect(403)
     })
 
     test('Should return 200 on load surveys with valid accessToken', async () => {
-      const result = await accountCollection.insertOne({
-        name: 'Euller',
-        email: 'euller@gmail.com',
-        password: '123',
-        role: 'admin'
-      })
+      const accessToken = await makeAccessToken()
 
-      const { insertedId: id } = result
-      const accessToken = sign({ id }, '%$Dda3ab*¨#')
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
       await surveyCollection.insertMany([{
         question: 'any_question',
         answers: [{
