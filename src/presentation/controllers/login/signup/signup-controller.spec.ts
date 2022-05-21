@@ -10,8 +10,8 @@ import {
   ServerError,
   MissingParamError,
   EmailInUseError
-} from '../../../errors'
-import { ok, badRequest, serverError, forbidden } from '../../../helpers/http/http-helpers'
+} from '@/presentation/errors'
+import { ok, badRequest, serverError, forbidden } from '@/presentation/helpers/http/http-helpers'
 import { Authentication, AuthenticationModel } from '../login/login-controller-protocols'
 
 const makeFakeRequest = (): HttpRequest => ({

@@ -1,3 +1,5 @@
+import 'module-alias/register'
+
 import { MongoHelper } from '../infra/db/mongodb/helpers/mongo-helper'
 
 MongoHelper.connect('mongodb://localhost:27017/clean-node-api').then(async () => {
