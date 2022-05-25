@@ -3,6 +3,7 @@ import { LoadSurveysRepository } from '@/data/protocols/db/survey/load-surveys-r
 import { AddSurveyModel, AddSurveyRepository } from '@/data/usecases/add-survey/db-add-survey-protocols'
 
 import { MongoHelper } from '../helpers/mongo-helper'
+import { ObjectId } from 'mongodb'
 
 export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository {
   async add (surveyData: AddSurveyModel): Promise<void> {
@@ -14,5 +15,12 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
     const surveyCollection = await MongoHelper.getCollection('surveys')
     const surveys: any[] = await surveyCollection.find().toArray()
     return surveys
+  }
+
+  async loadById (id: ObjectId): Promise<SurveyModel> {
+    const surveyCollection = await MongoHelper.getCollection('surveys')
+    const survey: any = await surveyCollection.findOne({ _id: id })
+    console.log(survey)
+    return survey
   }
 }
