@@ -106,7 +106,7 @@ describe('Account Mongo Repository', () => {
       })
 
       const sut = makeSut()
-      const survey = await sut.loadById(res.insertedId)
+      const survey = await sut.loadById(String(res.insertedId))
       expect(survey).toBeTruthy()
       expect(survey.id).toBeTruthy()
     })
